@@ -6928,29 +6928,74 @@ if ('serviceWorker' in navigator && !_isPreview) {
 /* ── Install Prompt (Add to Home Screen) ── */
 let deferredPrompt = null;
 
+// Show install button when browser fires beforeinstallprompt (Chrome, Edge, Android)
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
-
+  console.log('[TasteLab] Install prompt captured');
   const btn = document.getElementById('btn-install-pwa');
-  if (btn) {
-    btn.style.display = 'flex';
-    btn.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log('[TasteLab] Install prompt outcome:', outcome);
-      deferredPrompt = null;
-      btn.style.display = 'none';
-    });
-  }
+  if (btn) btn.style.display = 'flex';
 });
+
+// Trigger install — called by button onclick
+async function triggerInstall() {
+  if (!deferredPrompt) {
+    // Already installed or not supported — check
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      toast('✅ TasteLab is already installed!');
+    } else {
+      toast('Install prompt not available. Try from Chrome/Edge browser menu.', 'warn');
+    }
+    return;
+  }
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  console.log('[TasteLab] Install outcome:', outcome);
+  deferredPrompt = null;
+  const btn = document.getElementById('btn-install-pwa');
+  if (btn) btn.style.display = 'none';
+  if (outcome === 'accepted') {
+    if (typeof toast === 'function') toast('🎉 Installing TasteLab…', 'success');
+  }
+}
 
 window.addEventListener('appinstalled', () => {
   console.log('[TasteLab] App installed successfully');
   deferredPrompt = null;
+  const btn = document.getElementById('btn-install-pwa');
+  if (btn) btn.style.display = 'none';
   if (typeof toast === 'function') toast('🎉 TasteLab installed!', 'success');
 });
+
+// iOS Safari detection — show manual instructions
+(function() {
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isInStandaloneMode = window.navigator.standalone === true;
+  if (isIOS && !isInStandaloneMode) {
+    const hint = document.getElementById('ios-install-hint');
+    if (hint) hint.style.display = 'block';
+  }
+})();
+
+// If already installed as PWA, hide the install button
+if (window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true) {
+  window.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('btn-install-pwa');
+    const hint = document.getElementById('ios-install-hint');
+    if (btn)  btn.style.display  = 'none';
+    if (hint) hint.style.display = 'none';
+    // Show a friendly "installed" note instead
+    const moreTab = document.getElementById('tab-more');
+    if (moreTab) {
+      const note = document.createElement('div');
+      note.style.cssText = 'font-size:0.78rem;color:var(--muted);text-align:center;padding:4px 0';
+      note.textContent = '✅ TasteLab is installed on this device';
+      const firstBtn = moreTab.querySelector('.btn-ghost');
+      if (firstBtn) moreTab.querySelector('div').insertBefore(note, firstBtn);
+    }
+  });
+}
 
 /* ── PWA Shortcut URL Handler ── */
 (function() {
@@ -7260,6 +7305,17 @@ window.addEventListener('appinstalled', () => {
     <button class="btn-ghost" style="width:100%;justify-content:flex-start;gap:10px" onclick="startOnboarding()">
       🎓 App tour / help
     </button>
+    <!-- Install PWA button — shown only when browser fires beforeinstallprompt -->
+    <button id="btn-install-pwa" class="btn-ghost"
+      style="width:100%;justify-content:flex-start;gap:10px;display:none;border-color:var(--accent);color:var(--accent)"
+      onclick="triggerInstall()">
+      📲 Add to Home Screen
+    </button>
+    <!-- iOS fallback — always visible on Safari/iOS -->
+    <div id="ios-install-hint" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-size:0.82rem;color:var(--muted);line-height:1.6">
+      <strong style="color:var(--text)">📲 Install on iPhone / iPad</strong><br/>
+      Tap the <strong>Share</strong> button (↑) in Safari, then choose <strong>"Add to Home Screen"</strong>.
+    </div>
     <button class="btn-ghost" style="width:100%;justify-content:flex-start;gap:10px" onclick="clearAllData()">
       🗑️ Clear all data
     </button>
