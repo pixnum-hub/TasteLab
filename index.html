@@ -3742,8 +3742,7 @@
   <span>© <span id="copy-year"></span> Manik Roy</span>
   <span class="dot">•</span>
   <span id="footer-rights">All Rights Reserved</span>
-  <span class="dot">•</span>
-  <span>Recipe<a href="#">AI</a></span>
+
 </footer>
 <script>/* ─── STATE VARIABLES (hoisted) ───────────────────────── */
 const negPairs = new Set(); // blocked Indian negative pairs
@@ -6926,78 +6925,65 @@ if ('serviceWorker' in navigator && !_isPreview) {
 /* ── Install Prompt (Add to Home Screen) ── */
 let deferredPrompt = null;
 
-// Show install button when browser fires beforeinstallprompt (Chrome, Edge, Android)
+// beforeinstallprompt fires on Chrome/Edge/Android when PWA criteria are met.
+// Must preventDefault() to stop the mini-infobar and handle it ourselves.
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
-  console.log('[TasteLab] Install prompt captured');
+  console.log('[TasteLab] Install prompt ready');
   const btn = document.getElementById('btn-install-pwa');
   if (btn) btn.style.display = 'flex';
 });
 
-// Trigger install — called by button onclick
+// Button onclick
 async function triggerInstall() {
+  const btn = document.getElementById('btn-install-pwa');
   if (!deferredPrompt) {
-    // Already installed or not supported — check
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      toast('✅ TasteLab is already installed!');
-    } else {
-      toast('Install prompt not available. Try from Chrome/Edge browser menu.', 'warn');
-    }
+    if (typeof toast === 'function')
+      toast('Open in Chrome/Edge on desktop, or Chrome on Android to install', 'warn');
     return;
   }
+  // Hide button immediately to prevent double-tap
+  if (btn) btn.style.display = 'none';
   deferredPrompt.prompt();
   const { outcome } = await deferredPrompt.userChoice;
-  console.log('[TasteLab] Install outcome:', outcome);
   deferredPrompt = null;
-  const btn = document.getElementById('btn-install-pwa');
-  if (btn) btn.style.display = 'none';
-  if (outcome === 'accepted') {
-    if (typeof toast === 'function') toast('🎉 Installing TasteLab…', 'success');
-  }
+  console.log('[TasteLab] Install outcome:', outcome);
+  if (outcome === 'dismissed' && btn) btn.style.display = 'flex'; // restore if dismissed
+  if (outcome === 'accepted' && typeof toast === 'function')
+    toast('🎉 TasteLab is being installed…', 'success');
 }
 
+// Fires after the app is successfully added
 window.addEventListener('appinstalled', () => {
-  console.log('[TasteLab] App installed successfully');
   deferredPrompt = null;
   const btn = document.getElementById('btn-install-pwa');
   if (btn) btn.style.display = 'none';
   if (typeof toast === 'function') toast('🎉 TasteLab installed!', 'success');
+  console.log('[TasteLab] App installed');
 });
 
-// iOS Safari detection — show manual instructions
-(function() {
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isInStandaloneMode = window.navigator.standalone === true;
-  if (isIOS && !isInStandaloneMode) {
-    const hint = document.getElementById('ios-install-hint');
-    if (hint) hint.style.display = 'block';
-  }
-})();
+// After DOM ready: handle iOS + already-installed
+window.addEventListener('load', () => {
+  const isIOS        = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                    || navigator.standalone === true;
 
-// If already installed as PWA, hide the install button
-if (window.matchMedia('(display-mode: standalone)').matches ||
-    window.navigator.standalone === true) {
-  window.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('btn-install-pwa');
+  if (isStandalone) {
+    // Running as installed PWA — hide all install UI
+    const btn  = document.getElementById('btn-install-pwa');
     const hint = document.getElementById('ios-install-hint');
     if (btn)  btn.style.display  = 'none';
     if (hint) hint.style.display = 'none';
-    // Show a friendly "installed" note instead
-    const moreTab = document.getElementById('tab-more');
-    if (moreTab) {
-      const note = document.createElement('div');
-      note.style.cssText = 'font-size:0.78rem;color:var(--muted);text-align:center;padding:4px 0';
-      note.textContent = '✅ TasteLab is installed on this device';
-      const firstBtn = moreTab.querySelector('.btn-ghost');
-      if (firstBtn && firstBtn.parentNode) {
-        firstBtn.parentNode.insertBefore(note, firstBtn);
-      } else {
-        moreTab.prepend(note);
-      }
-    }
-  });
-}
+    return;
+  }
+
+  if (isIOS) {
+    // iOS Safari doesn't fire beforeinstallprompt — show manual steps
+    const hint = document.getElementById('ios-install-hint');
+    if (hint) hint.style.display = 'block';
+  }
+});
 
 /* ── PWA Shortcut URL Handler ── */
 (function() {
@@ -7307,16 +7293,18 @@ if (window.matchMedia('(display-mode: standalone)').matches ||
     <button class="btn-ghost" style="width:100%;justify-content:flex-start;gap:10px" onclick="startOnboarding()">
       🎓 App tour / help
     </button>
-    <!-- Install PWA button — shown only when browser fires beforeinstallprompt -->
+    <!-- Install PWA: hidden until beforeinstallprompt fires (Chrome/Edge/Android) -->
     <button id="btn-install-pwa" class="btn-ghost"
       style="width:100%;justify-content:flex-start;gap:10px;display:none;border-color:var(--accent);color:var(--accent)"
       onclick="triggerInstall()">
       📲 Add to Home Screen
     </button>
-    <!-- iOS fallback — always visible on Safari/iOS -->
-    <div id="ios-install-hint" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-size:0.82rem;color:var(--muted);line-height:1.6">
+    <!-- iOS Safari: shown only on iOS non-standalone -->
+    <div id="ios-install-hint" style="display:none;background:var(--surface2);border:1px solid var(--accent);border-radius:var(--radius-sm);padding:12px 14px;font-size:0.82rem;color:var(--muted);line-height:1.7">
       <strong style="color:var(--text)">📲 Install on iPhone / iPad</strong><br/>
-      Tap the <strong>Share</strong> button (↑) in Safari, then choose <strong>"Add to Home Screen"</strong>.
+      1. Tap the <strong>Share ↑</strong> button in Safari's toolbar<br/>
+      2. Scroll down and tap <strong>"Add to Home Screen"</strong><br/>
+      3. Tap <strong>Add</strong>
     </div>
     <button class="btn-ghost" style="width:100%;justify-content:flex-start;gap:10px" onclick="clearAllData()">
       🗑️ Clear all data
@@ -7324,8 +7312,8 @@ if (window.matchMedia('(display-mode: standalone)').matches ||
   </div>
 </div>
 
-</body>
-</html><script>
+
+<script>
 /* ═══════════════════════════════════════════════════════════════
    TASTELAB — NEW FEATURES JS  (15 features)
    1. Meal Planner  2. Search+Filter  3. Voice Input
@@ -8699,3 +8687,5 @@ window.addEventListener('load', () => {
   }
 });
 </script>
+</body>
+</html>
