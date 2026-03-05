@@ -4171,6 +4171,33 @@ const TRANSLATIONS = {
     stepsAny8: '🔟 8-12 Steps',
     stepsPro: '📚 Full Pro',
     prepNoLimit: 'No limit',
+
+    /* ── Bottom Nav ── */
+    bnavHome:   'Home',
+    bnavSaved:  'Saved',
+    bnavPlan:   'Plan',
+    bnavStats:  'Stats',
+    bnavMore:   'More',
+    bnavHelp:   'Help',
+    /* ── New Action Buttons ── */
+    btnEmail:   '✉️ Email',
+    btnTTS:     '🔊 Listen',
+    btnVariant: '🔀 Variant',
+    btnDup:     '📄 Duplicate',
+    btnEdit:    '✏️ Edit',
+    btnCompare: '⚖️ Compare',
+    btnNotes:   '📝 Notes',
+    btnTag:     '🏷️ Tag',
+    btnGoals:   '🎯 Goals',
+
+    /* Tab titles */
+    tabSaved:   '🔖 Saved Recipes',
+    tabPlan:    '📅 Weekly Meal Planner',
+    tabStats:   '📊 Your Cooking Stats',
+    tabMore:    '⚙️ More',
+    /* Cache / offline */
+    btnSaveOffline: 'Save offline',
+    btnCacheGroup:  'Group',
     apiLang:         'English',
   },
 
@@ -4556,6 +4583,32 @@ const TRANSLATIONS = {
     stepsAny8: '🔟 8-12 चरण',
     stepsPro: '📚 पूर्ण प्रो',
     prepNoLimit: 'कोई सीमा नहीं',
+
+    /* ── Bottom Nav ── */
+    bnavHome:   'होम',
+    bnavSaved:  'सहेजे',
+    bnavPlan:   'योजना',
+    bnavStats:  'आँकड़े',
+    bnavMore:   'अधिक',
+    bnavHelp:   'सहायता',
+    /* ── New Action Buttons ── */
+    btnEmail:   '✉️ ईमेल',
+    btnTTS:     '🔊 सुनें',
+    btnVariant: '🔀 वेरिएंट',
+    btnDup:     '📄 डुप्लीकेट',
+    btnEdit:    '✏️ संपादित',
+    btnCompare: '⚖️ तुलना',
+    btnNotes:   '📝 नोट्स',
+    btnTag:     '🏷️ टैग',
+    btnGoals:   '🎯 लक्ष्य',
+
+    /* Tab titles */
+    tabSaved:   '🔖 सहेजी गई रेसिपी',
+    tabPlan:    '📅 साप्ताहिक भोजन योजनाकार',
+    tabStats:   '📊 आपके खाना पकाने के आँकड़े',
+    tabMore:    '⚙️ अधिक',
+    btnSaveOffline: 'ऑफलाइन सहेजें',
+    btnCacheGroup:  'समूह',
     apiLang:         'Hindi',
   },
 
@@ -4941,6 +4994,32 @@ const TRANSLATIONS = {
     stepsAny8: '🔟 ৮-১২ ধাপ',
     stepsPro: '📚 সম্পূর্ণ প্রো',
     prepNoLimit: 'কোনো সীমা নেই',
+
+    /* ── Bottom Nav ── */
+    bnavHome:   'হোম',
+    bnavSaved:  'সংরক্ষিত',
+    bnavPlan:   'পরিকল্পনা',
+    bnavStats:  'পরিসংখ্যান',
+    bnavMore:   'আরও',
+    bnavHelp:   'সহায়তা',
+    /* ── New Action Buttons ── */
+    btnEmail:   '✉️ ইমেইল',
+    btnTTS:     '🔊 শুনুন',
+    btnVariant: '🔀 ভেরিয়েন্ট',
+    btnDup:     '📄 অনুলিপি',
+    btnEdit:    '✏️ সম্পাদনা',
+    btnCompare: '⚖️ তুলনা',
+    btnNotes:   '📝 নোট',
+    btnTag:     '🏷️ ট্যাগ',
+    btnGoals:   '🎯 লক্ষ্য',
+
+    /* Tab titles */
+    tabSaved:   '🔖 সংরক্ষিত রেসিপি',
+    tabPlan:    '📅 সাপ্তাহিক খাবার পরিকল্পনা',
+    tabStats:   '📊 আপনার রান্নার পরিসংখ্যান',
+    tabMore:    '⚙️ আরও',
+    btnSaveOffline: 'অফলাইনে সংরক্ষণ',
+    btnCacheGroup:  'গ্রুপ',
     apiLang:         'Bengali',
   }
 };
@@ -5048,6 +5127,35 @@ function applyTranslations() {
 
   /* Footer */
   setTxt('footer-rights', t('footerRights'));
+
+  /* ── Bottom Nav labels ─────────────────────────────── */
+  setTxt('bnav-home-lbl',  t('bnavHome'));
+  setTxt('bnav-saved-lbl', t('bnavSaved'));
+  setTxt('bnav-plan-lbl',  t('bnavPlan'));
+  setTxt('bnav-stats-lbl', t('bnavStats'));
+  setTxt('bnav-more-lbl',  t('bnavMore'));
+  setTxt('bnav-help-lbl',  t('bnavHelp'));
+
+  /* ── Tab page section titles ───────────────────────── */
+  setTxt('tab-title-saved',  t('tabSaved'));
+  setTxt('tab-title-plan',   t('tabPlan'));
+  setTxt('tab-title-stats',  t('tabStats'));
+  setTxt('tab-title-more',   t('tabMore'));
+
+  /* ── Cache / shopping buttons ─────────────────────── */
+  setTxt('cache-btn',      t('btnSaveOffline'));
+  setTxt('btn-shop-group', t('btnCacheGroup'));
+
+  /* ── New action buttons ────────────────────────────── */
+  setTxt('btn-email',   t('btnEmail'));
+  setTxt('btn-tts',     t('btnTTS'));
+  setTxt('btn-variant', t('btnVariant'));
+  setTxt('btn-dup',     t('btnDup'));
+  setTxt('btn-edit',    t('btnEdit'));
+  setTxt('btn-compare', t('btnCompare'));
+  setTxt('btn-notes',   t('btnNotes'));
+  setTxt('btn-tag',     t('btnTag'));
+  setTxt('btn-goals',   t('btnGoals'));
 
 
   /* ── Advanced Settings Labels ─────────────────────────── */
@@ -5390,13 +5498,17 @@ function applyTranslations() {
     '📚 Full Pro':      t('stepsPro'),
   };
 
-  // Apply pill text translations — only to pills inside the adv-settings-panel
+  // Apply pill text translations — use stable data-en key, stamp on first call
   const advPanel = document.getElementById('adv-settings-panel');
   if (advPanel) {
     advPanel.querySelectorAll('.pill, .multi-pill').forEach(pill => {
-      const raw = pill.textContent.trim();
-      if (pillTextMap[raw] !== undefined) {
-        pill.textContent = pillTextMap[raw];
+      // Stamp the original English text once, so we always translate from source
+      if (!pill.dataset.en) {
+        pill.dataset.en = pill.textContent.trim();
+      }
+      const enKey = pill.dataset.en;
+      if (pillTextMap[enKey] !== undefined) {
+        pill.textContent = pillTextMap[enKey];
       }
     });
   }
@@ -7222,29 +7334,29 @@ window.addEventListener('load', () => {
 
 <nav class="bottom-nav" id="bottom-nav">
   <button class="bnav-btn active" id="bnav-home"   onclick="switchTab('home')">
-    <span class="bnav-icon">🍽️</span>Home
+    <span class="bnav-icon">🍽️</span><span id="bnav-home-lbl">Home</span>
   </button>
   <button class="bnav-btn" id="bnav-saved"  onclick="switchTab('saved')">
-    <span class="bnav-icon">🔖</span>Saved
+    <span class="bnav-icon">🔖</span><span id="bnav-saved-lbl">Saved</span>
     <span class="bnav-badge" id="bnav-saved-badge" style="display:none">0</span>
   </button>
   <button class="bnav-btn" id="bnav-plan"   onclick="switchTab('plan')">
-    <span class="bnav-icon">📅</span>Plan
+    <span class="bnav-icon">📅</span><span id="bnav-plan-lbl">Plan</span>
   </button>
   <button class="bnav-btn" id="bnav-stats"  onclick="switchTab('stats')">
-    <span class="bnav-icon">📊</span>Stats
+    <span class="bnav-icon">📊</span><span id="bnav-stats-lbl">Stats</span>
   </button>
   <button class="bnav-btn" id="bnav-more"   onclick="switchTab('more')">
-    <span class="bnav-icon">⚙️</span>More
+    <span class="bnav-icon">⚙️</span><span id="bnav-more-lbl">More</span>
   </button>
   <button class="bnav-btn" id="bnav-help"   onclick="startOnboarding()">
-    <span class="bnav-icon">❓</span>Help
+    <span class="bnav-icon">❓</span><span id="bnav-help-lbl">Help</span>
   </button>
 </nav>
 
 <!-- ══ TAB PAGES (hidden, shown by switchTab) ══ -->
 <div id="tab-saved"  class="tab-page" style="padding:16px 16px 80px;max-width:600px;margin:0 auto">
-  <div class="page-section-title">🔖 Saved Recipes</div>
+  <div class="page-section-title" id="tab-title-saved">🔖 Saved Recipes</div>
   <div class="search-bar-wrap">
     <input type="text" class="search-bar" id="saved-search" placeholder="Search saved recipes…" oninput="filterSaved(this.value)"/>
     <button class="search-clear" onclick="document.getElementById('saved-search').value='';filterSaved('')">✕</button>
@@ -7256,7 +7368,7 @@ window.addEventListener('load', () => {
 </div>
 
 <div id="tab-plan"   class="tab-page" style="padding:16px 16px 80px">
-  <div class="page-section-title">📅 Weekly Meal Planner</div>
+  <div class="page-section-title" id="tab-title-plan">📅 Weekly Meal Planner</div>
   <div class="meal-grid" id="meal-planner-tab-grid" style="margin-bottom:16px"></div>
   <div style="max-width:600px;margin:0 auto">
     <button class="btn-ghost" style="width:100%;margin-bottom:8px" onclick="exportPlannerShoppingList()">🛒 Generate week shopping list</button>
@@ -7265,12 +7377,12 @@ window.addEventListener('load', () => {
 </div>
 
 <div id="tab-stats"  class="tab-page" style="padding:16px 16px 80px;max-width:600px;margin:0 auto">
-  <div class="page-section-title">📊 Your Cooking Stats</div>
+  <div class="page-section-title" id="tab-title-stats">📊 Your Cooking Stats</div>
   <div id="stats-tab-content"></div>
 </div>
 
 <div id="tab-more"   class="tab-page" style="padding:16px 16px 80px;max-width:600px;margin:0 auto">
-  <div class="page-section-title">⚙️ More</div>
+  <div class="page-section-title" id="tab-title-more">⚙️ More</div>
   <div style="display:flex;flex-direction:column;gap:10px">
     <button class="btn-ghost" style="width:100%;justify-content:flex-start;gap:10px" onclick="openModal('modal-import')">
       🔗 Import recipe from URL
