@@ -1,11 +1,11 @@
 /* ═══════════════════════════════════════════════════════════════
-   TasteLab Service Worker — v4.3.0
+   TasteLab Service Worker — v4.4.0
    Strategy: Cache-first for assets, Network-first for API
    Updated: New features — meal planner, collections, voice input,
             TTS, offline recipe cache, stats, compare, notes, tags
    ═══════════════════════════════════════════════════════════════ */
 
-const CACHE_NAME    = 'tastelab-v4.3';
+const CACHE_NAME    = 'tastelab-v4.4';
 const RUNTIME_CACHE = 'tastelab-runtime-v4.1';
 
 /* Pre-cache on install — core shell only */
@@ -25,7 +25,7 @@ self.addEventListener('install', event => {
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(PRECACHE_ASSETS))
       .then(() => {
-        console.log('[TasteLab SW] v4.3.0 installed');
+        console.log('[TasteLab SW] v4.4.0 installed');
         return self.skipWaiting();
       })
   );
@@ -203,4 +203,4 @@ self.addEventListener('message', event => {
   }
 });
 
-console.log('[TasteLab SW] Service Worker v4.3.0 loaded');
+console.log('[TasteLab SW] Service Worker v4.4.0 loaded');
