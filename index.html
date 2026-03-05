@@ -987,9 +987,12 @@
 
     /* ── BOTTOM NAV TABS ─────────────────────────────────── */
     .bottom-nav {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: var(--surface); border-top: 1px solid var(--border);
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 600px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-bottom: none; border-radius: 14px 14px 0 0;
       display: flex; z-index: 300; padding-bottom: env(safe-area-inset-bottom,0);
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.18);
     }
     .bnav-btn {
       flex: 1; display: flex; flex-direction: column; align-items: center;
