@@ -6886,35 +6886,33 @@ document.getElementById('copy-year').textContent = new Date().getFullYear();
 </script>
 
 <script>
-/* ── TasteLab PWA: Service Worker Registration — v4.1.0 ── */
+/* ── TasteLab PWA: Service Worker Registration — v5.0.0 ── */
 
-// Preview environments (claude.ai, CodePen, StackBlitz, localhost file://, etc.)
-// don't serve sw.js — skip registration silently so no console errors appear.
+// Preview / sandboxed environments don't serve sw.js — skip silently.
 const _pwaSkipHosts = [
-  'claudeusercontent.com',
-  'codepen.io',
-  'stackblitz.io',
-  'codesandbox.io',
-  'jsbin.com',
-  'jsfiddle.net',
+  'claudeusercontent.com', 'claude.ai', 'codepen.io',
+  'stackblitz.io', 'codesandbox.io', 'jsbin.com', 'jsfiddle.net',
 ];
-const _isPreview = _pwaSkipHosts.some(h => location.hostname.endsWith(h))
-                || location.protocol === 'file:';
+const _isPreview = _pwaSkipHosts.some(h => location.hostname === h || location.hostname.endsWith('.' + h))
+                || location.protocol === 'file:'
+                || location.hostname === 'localhost';
 
 if ('serviceWorker' in navigator && !_isPreview) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
+    navigator.serviceWorker.register('./sw.js', { scope: './' })
       .then(reg => {
-        console.log('[TasteLab] SW registered, scope:', reg.scope);
-
-        // Listen for SW updates
+        console.log('[TasteLab] SW v5 registered, scope:', reg.scope);
         reg.addEventListener('updatefound', () => {
-          const newWorker = reg.installing;
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              if (typeof toast === 'function') {
-                toast('✨ App updated — refresh for latest version');
-              }
+          const nw = reg.installing;
+          nw.addEventListener('statechange', () => {
+            if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+              // Tell SW to take over immediately, then reload
+              nw.postMessage({ type: 'SKIP_WAITING' });
+              navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (typeof toast === 'function')
+                  toast('✨ TasteLab updated — reloading…');
+                setTimeout(() => location.reload(), 1200);
+              }, { once: true });
             }
           });
         });
@@ -6922,7 +6920,7 @@ if ('serviceWorker' in navigator && !_isPreview) {
       .catch(err => console.warn('[TasteLab] SW registration failed:', err));
   });
 } else if (_isPreview) {
-  console.info('[TasteLab] Preview environment detected — Service Worker skipped. PWA features active when deployed to your own domain.');
+  console.info('[TasteLab] Preview env — SW skipped. Deploy to your domain for full PWA.');
 }
 
 /* ── Install Prompt (Add to Home Screen) ── */
@@ -6992,7 +6990,11 @@ if (window.matchMedia('(display-mode: standalone)').matches ||
       note.style.cssText = 'font-size:0.78rem;color:var(--muted);text-align:center;padding:4px 0';
       note.textContent = '✅ TasteLab is installed on this device';
       const firstBtn = moreTab.querySelector('.btn-ghost');
-      if (firstBtn) moreTab.querySelector('div').insertBefore(note, firstBtn);
+      if (firstBtn && firstBtn.parentNode) {
+        firstBtn.parentNode.insertBefore(note, firstBtn);
+      } else {
+        moreTab.prepend(note);
+      }
     }
   });
 }
